@@ -1,4 +1,6 @@
-from enum import Enum
+from enum import Enum, IntEnum
+
+from pydantic import BaseModel
 
 
 class Tag(str, Enum):
@@ -7,7 +9,10 @@ class Tag(str, Enum):
     health = "Health"
 
 
-class Priority(int, Enum):
+class Priority(IntEnum):
+    """
+    Explicitly mention that this enum is Int type so that we could use them easily in the Path varibales
+    """
     one = 1
     two = 2
     three = 3
@@ -15,10 +20,17 @@ class Priority(int, Enum):
     five = 5
 
 
-ToDo = [
+class TODO(BaseModel):
+    todo_name: str
+    priority: Priority
+    tag: Tag
+
+
+ToDo_List = [
     {
         "todo_name": "Learn Everyday",
         "priority": Priority.one,
-        "tag": Tag.learn
+        "tag": Tag.learn,
+        "id": 1
     }
 ]
