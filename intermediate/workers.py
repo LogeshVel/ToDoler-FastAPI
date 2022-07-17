@@ -1,0 +1,99 @@
+from intermediate.custom_exceptions import NegativeNumberException
+from intermediate.data import TODO, ToDo_List, Priority, Tag
+from fastapi import HTTPException
+
+
+class IntermediateTodoWorkers:
+    @classmethod
+    def get_todo_by_id(cls, todo_id: int):
+        cls.handle_negative_todo_id(todo_id)
+        for _todo in ToDo_List:
+            if todo_id == _todo.get("id"):
+                return _todo
+        raise HTTPException(status_code=404, detail=f"No match id - {todo_id}")
+
+    @classmethod
+    def get_todo_item(cls, priority: Priority = None, tag: Tag = None):
+        return_list = []
+        if priority is not None and tag is not None:
+            for _todo in ToDo_List:
+                if "priority" in _todo and "tag" in _todo:
+                    if _todo["priority"] == priority and _todo["tag"] == tag:
+                        return_list.append(_todo)
+            return return_list
+        if priority is not None:
+            for _todo in ToDo_List:
+                if "priority" in _todo:
+                    if _todo["priority"] == priority:
+                        return_list.append(_todo)
+            return return_list
+
+        if tag is not None:
+            for _todo in ToDo_List:
+                if "tag" in _todo:
+                    if _todo["tag"] == tag:
+                        return_list.append(_todo)
+            return return_list
+
+    @classmethod
+    def add_todo_item(cls, payload: TODO):
+        if len(ToDo_List) == 0:
+            last_todo_id = 0
+        else:
+            last_todo_id = ToDo_List[-1]["id"]
+
+        _todo = {
+            "id": last_todo_id + 1,
+            "todo_name": payload.todo_name,
+            "priority": payload.priority,
+            "tag": payload.tag
+        }
+        if payload.no_of_days is not None:
+            _todo["no_of_days"] = payload.no_of_days
+        ToDo_List.append(_todo)
+
+        return last_todo_id + 1
+
+    @classmethod
+    def update_todo_item(cls, payload: TODO, todo_id: int):
+        cls.handle_negative_todo_id(todo_id)
+        for idx, _todo in enumerate(ToDo_List):
+            if todo_id == _todo.get("id"):
+                _todo_update = {
+                    "todo_name": payload.todo_name,
+                    "priority": payload.priority,
+                    "tag": payload.tag
+                }
+                ToDo_List[idx] = _todo_update
+                return {"status": "Success", "isError": False}
+        raise HTTPException(status_code=404, detail=f"No match id - {todo_id}")
+
+    @classmethod
+    def patch_todo_item(cls, todo_id: int, todo_name: str = None, priority: Priority = None, tag: Tag = None):
+        cls.handle_negative_todo_id(todo_id)
+        for _todo in ToDo_List:
+            if todo_id == _todo.get("id"):
+                if todo_name is not None:
+                    _todo["todo_name"] = todo_name
+                if priority is not None:
+                    _todo["priority"] = priority
+                if tag is not None:
+                    _todo["tag"] = tag
+                return {"status": "Success", "description": f"Successfully patched the Todo item - {todo_id}",
+                        "isError": False}
+        raise HTTPException(status_code=404, detail=f"No match id - {todo_id}")
+
+    @classmethod
+    def delete_todo_item(cls, todo_id_to_del: int):
+        cls.handle_negative_todo_id(todo_id_to_del)
+        for idx, _todo in enumerate(ToDo_List):
+            if todo_id_to_del == _todo.get("id"):
+                del ToDo_List[idx]
+                return {"status": "Success", "description": f"Successfully deleted the Todo item - {todo_id_to_del}",
+                        "isError": False}
+        raise HTTPException(status_code=404, detail=f"No match id - {todo_id_to_del}")
+
+    @classmethod
+    def handle_negative_todo_id(cls, todo_id: int):
+        if todo_id < 0:
+            raise NegativeNumberException(todo_id)
