@@ -55,4 +55,42 @@ async def create_todo(payload: TODO):
         "tag": payload.tag
     }
     ToDo_List.append(_todo)
-    return {"status": "Success"}
+    return {"id": last_todo_id + 1, "status": "Success"}
+
+
+@todo.put('/todo/{todo_id}')
+async def update_todo(todo_id: int, payload: TODO):
+    for idx, _todo in enumerate(ToDo_List):
+        if todo_id == _todo.get("id"):
+            _todo_update = {
+                "todo_name": payload.todo_name,
+                "priority": payload.priority,
+                "tag": payload.tag
+            }
+            ToDo_List[idx] = _todo_update
+            return {"status": "Success"}
+
+    return {"status": "Failed", "Reason": f"No such Todo id {todo_id}"}
+
+
+@todo.patch('/todo/patch/{todo_id}')
+async def patch_todo(todo_id: int, todo_name: str = None, priority: Priority = None, tag: Tag = None):
+    for _todo in ToDo_List:
+        if todo_id == _todo.get("id"):
+            if todo_name is not None:
+                _todo["todo_name"] = todo_name
+            if priority is not None:
+                _todo["priority"] = priority
+            if tag is not None:
+                _todo["tag"] = tag
+            return {"status": "Success", "description": f"Successfully patched the Todo item - {todo_id}"}
+    return {"status": "Failed", "description": f"There is no such todo item with the given id - {todo_id}"}
+
+
+@todo.delete('/todo/delete/{todo_id}')
+async def delete_todo(todo_id: int):
+    for idx, _todo in enumerate(ToDo_List):
+        if todo_id == _todo.get("id"):
+            del ToDo_List[idx]
+            return {"status": "Success", "description": f"Successfully deleted the Todo item - {todo_id}"}
+    return {"status": "Failed", "description": f"There is no such todo item with the given id - {todo_id}"}

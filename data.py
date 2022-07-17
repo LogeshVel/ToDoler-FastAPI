@@ -28,9 +28,9 @@ class TODO(BaseModel):
 
 ToDo_List = [
     {
+        "id": 1,
         "todo_name": "Learn Everyday",
         "priority": Priority.one,
-        "tag": Tag.learn,
-        "id": 1
+        "tag": Tag.learn
     }
 ]
