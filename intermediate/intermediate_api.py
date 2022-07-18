@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, Form
 from fastapi.responses import JSONResponse
 
 from intermediate.custom_exceptions import NegativeNumberException
@@ -19,6 +19,11 @@ async def negative_id_exception(request: Request, exc: NegativeNumberException):
 @todo.get('/')
 async def root_page():
     return {"status": "Success", "description": "Welcome to the root page"}
+
+
+@todo.post('/todo/dummy_login')
+async def dummy_login(username: str = Form(), password: str = Form()):
+    return {"username": username, "password": password}
 
 
 @todo.get('/todo/list')
