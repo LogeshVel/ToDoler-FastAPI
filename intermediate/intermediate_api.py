@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, status, Form
+from fastapi import FastAPI, Request, status, Form, Header
 from fastapi.responses import JSONResponse
 
 from intermediate.custom_exceptions import NegativeNumberException
@@ -24,6 +24,11 @@ async def root_page():
 @todo.post('/todo/dummy_login')
 async def dummy_login(username: str = Form(), password: str = Form()):
     return {"username": username, "password": password}
+
+
+@todo.get('/token/header')
+async def dummy_header(x_auth_token: str = Header()):
+    return {"x-auth-token": x_auth_token}
 
 
 @todo.get('/todo/list')
