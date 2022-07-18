@@ -44,6 +44,13 @@ class TODO(BaseModel):
         }
 
 
+# This class is to demonstrate the use of the Response model of the FatsAPI.
+# Just use this class name as the value of the response_model parameter of the FastAPI application,
+# Then the response will be evaluated and returns based on this class
+class ToDoName(BaseModel):
+    todo_name: str = Field(title="ToDo name", min_length=2)
+
+
 ToDo_List = [
     {
         "id": 1,
