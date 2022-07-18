@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
 from intermediate.custom_exceptions import NegativeNumberException
@@ -41,7 +41,7 @@ async def filter_todo(priority: Priority, tag: Tag):
     return {"todo_list": IntermediateTodoWorkers.get_todo_item(priority=priority, tag=tag)}
 
 
-@todo.post("/todo/create")
+@todo.post("/todo/create", status_code=status.HTTP_201_CREATED)
 async def create_todo(payload: TODO):
     return {"id": IntermediateTodoWorkers.add_todo_item(payload), "status": "Success"}
 
@@ -53,7 +53,7 @@ async def get_todo(todo_id: int):
 
 # using response model
 @todo.get('/todo/name/{todo_id}', response_model=ToDoName)
-async def get_todo(todo_id: int):
+async def get_todo_name(todo_id: int):
     return IntermediateTodoWorkers.get_todo_by_id(todo_id)
 
 
