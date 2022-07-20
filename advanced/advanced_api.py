@@ -1,10 +1,10 @@
 from fastapi import FastAPI, Request, status, Form, Header
 from fastapi.responses import JSONResponse
 
-from advanced.auth import user_auth
+from advanced.todo_routers.auth import user_auth
 from advanced.custom_exceptions import NegativeNumberException
 from advanced.data import ToDo_List, Priority, Tag, TODO, ToDoName
-from advanced.user import user
+from advanced.todo_routers.user import user
 from advanced.workers import AdvancedTodoWorkers
 
 todo = FastAPI()
