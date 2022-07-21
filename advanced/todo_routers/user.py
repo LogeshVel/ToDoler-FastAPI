@@ -8,7 +8,7 @@ user = APIRouter()
 salt = bcrypt.gensalt()
 
 
-def hasp_password(password):
+def hash_password(password):
     password = password.encode('utf-8')
     return bcrypt.hashpw(password, salt)
 
@@ -21,7 +21,7 @@ async def list_all_users():
 @user.post('/user/create', status_code=status.HTTP_201_CREATED)
 async def create_user(user_details: USER):
     usr = user_details.username
-    u = {usr: hasp_password(user_details.password)}
+    u = {usr: hash_password(user_details.password)}
     if usr in USERS_DATA:
         return JSONResponse(status_code=406,
                             content=f"Username - {usr} already exists"
