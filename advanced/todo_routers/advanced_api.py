@@ -1,23 +1,11 @@
-from fastapi import FastAPI, Request, status, Form, Header
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, status, Header
 
-from advanced.todo_routers.auth import user_auth, validate_token
-from advanced.custom_exceptions import NegativeNumberException
+
+from advanced.todo_routers.auth import validate_token
 from advanced.data import ToDo_List, Priority, Tag, TODO, ToDoName
-from advanced.todo_routers.user import user
 from advanced.workers import AdvancedTodoWorkers
 
-todo = FastAPI()
-todo.include_router(user)
-todo.include_router(user_auth)
-
-
-@todo.exception_handler(NegativeNumberException)
-async def negative_id_exception(request: Request, exc: NegativeNumberException):
-    return JSONResponse(
-        status_code=418,
-        content={"message": f"Oops! Found unexpected negative todo id : {exc.negative_id}"},
-    )
+todo = APIRouter()
 
 
 @todo.get('/')
@@ -75,7 +63,8 @@ async def update_todo(todo_id: int, payload: TODO, x_auth_token: str = Header())
 
 
 @todo.patch('/todo/{todo_id}')
-async def patch_todo(todo_id: int, todo_name: str = None, priority: Priority = None, tag: Tag = None, x_auth_token: str = Header()):
+async def patch_todo(todo_id: int, todo_name: str = None, priority: Priority = None, tag: Tag = None,
+                     x_auth_token: str = Header()):
     validate_token(x_auth_token)
     return AdvancedTodoWorkers.patch_todo_item(todo_id=todo_id, todo_name=todo_name, priority=priority, tag=tag)
 
