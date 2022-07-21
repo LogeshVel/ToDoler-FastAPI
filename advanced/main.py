@@ -10,7 +10,7 @@ todo_app = FastAPI()
 todo_app.include_router(user)
 todo_app.include_router(user_auth)
 todo_app.include_router(todo)
-
+# We can give the prefix and tags to the .include_router() function
 
 @todo_app.exception_handler(NegativeNumberException)
 async def negative_id_exception(request: Request, exc: NegativeNumberException):
