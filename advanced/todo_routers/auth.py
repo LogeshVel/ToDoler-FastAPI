@@ -5,14 +5,18 @@ from advanced.todo_routers.user import hash_password
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 
-user_auth = APIRouter()
+user_auth = APIRouter(
+    prefix="/auth",
+    tags=["auth"]
+)
+# this prefix and tags can be used at the time of including this route to the FastAPI app
 
 JWT_SECRET_KEY = "1dweinwrgrqpo3oj3094ioqfne5yo43#@*&^$*"
 JWT_ALGO = "HS256"
 
 
-@user_auth.post('/user/login', status_code=status.HTTP_200_OK)
-async def authenticate_user(login_details: USER):
+@user_auth.post('/user', status_code=status.HTTP_200_OK)
+async def authenticate_user_and_get_token(login_details: USER):
     username = login_details.username
     given_pass = login_details.password
     hash_pass = hash_password(given_pass)

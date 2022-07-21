@@ -3,7 +3,10 @@ from fastapi.responses import JSONResponse
 from advanced.data import USERS_DATA, USER
 import bcrypt
 
-user = APIRouter()
+user = APIRouter(
+    prefix="/user",
+    tags=["user"]
+)
 
 salt = bcrypt.gensalt()
 
@@ -13,12 +16,12 @@ def hash_password(password):
     return bcrypt.hashpw(password, salt)
 
 
-@user.get('/user/all')
+@user.get('/all')
 async def list_all_users():
     return {"users": list(USERS_DATA.keys())}
 
 
-@user.post('/user/create', status_code=status.HTTP_201_CREATED)
+@user.post('/create', status_code=status.HTTP_201_CREATED)
 async def create_user(user_details: USER):
     usr = user_details.username
     u = {usr: hash_password(user_details.password)}
