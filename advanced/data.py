@@ -66,6 +66,4 @@ class USER(BaseModel):
     password: str = Field(min_length=8)
 
 
-USERS_DATA = {
-    "admin": "admin123!"
-}
+USERS_DATA = {}
