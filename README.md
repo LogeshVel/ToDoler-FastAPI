@@ -69,6 +69,15 @@ http://localhost:8000/docs
 - FastAPI exception handler
 - BaseModel for the API inputs
 
+## Swagger snaps
+
+#### Todo operations
+
+![Image](https://github.com/LogeshVel/ToDoler-FastAPI/blob/main/advanced/swagger_snaps/todos.png)
+
+#### User and Auth operations
+
+![Image](https://github.com/LogeshVel/ToDoler-FastAPI/blob/main/advanced/swagger_snaps/user_auth.png)
 
 See the swagger documentation for more after running the server.
 
